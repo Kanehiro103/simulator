@@ -5,18 +5,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void) {
+int main(int argc, char* argv[]) {
     int flag = 0;
+    char* samples = "./samples/";
+    char* logfiles = "./logfiles/log_";
+    char* dat = ".dat";
+    char read_file[128];
+    char log_file[128];
 
-    FILE* fp = fopen("datalog.txt", "w");
-    if(fp == NULL) {
-        exit(1);
+    if(argc <= 1) {
+        printf("Usage: %s <filename>\n", argv[0]);
+        return 0;
     }
+
+    sprintf(read_file, "%s%s%s", samples, argv[1], dat);
+    sprintf(log_file, "%s%s%s", logfiles, argv[1], dat);
 
     reg_set reg;
     init_reg(&reg);
 
-    if(read(&reg, "./samples/fib.dat")) {
+    if(read(&reg, read_file)) {
+        printf("file not found\n");
+        exit(1);
+    }
+
+    FILE* fp = fopen(log_file, "w");
+    if(fp == NULL) {
         exit(1);
     }
 
