@@ -483,7 +483,7 @@ void jr(reg_set* reg, op_set* op, change* chg) {
     chg->before_pc = reg->pc;
 
     // レジスタフェッチ
-    unsigned int x1 = reg_fetch(reg, op->src1);
+    unsigned int x1 = reg_fetch(reg, op->src2);
 
     // 実行
 
@@ -507,11 +507,12 @@ void lw(reg_set* reg, op_set* op, change* chg) {
     chg->before_rm = reg_fetch(reg, op->dest);
 
     // レジスタフェッチ
+    unsigned int x = reg_fetch(reg, op->src2);
 
     // 実行
 
     // メモリアクセス
-    unsigned int x1 = mem_fetch(reg, op->src1);
+    unsigned int x1 = mem_fetch(reg, x);
 
     // ライトバック
     reg_write(reg, op->dest, x1);
