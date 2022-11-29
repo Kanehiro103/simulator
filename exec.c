@@ -555,9 +555,50 @@ void sw(reg_set* reg, op_set* op, change* chg) {
     check_chg(chg);
 }
 
+void print_id(enum nemonic op) {
+    switch(op) {
+        case ADD: printf("ADD\n");  break;
+        case SUB: printf("SUB\n");  break;
+        case SLL: printf("SLL\n");  break;
+        case SRL: printf("SRL\n");  break;
+        case SRA: printf("SRA\n");  break;
+        case ADDI: printf("ADDI\n");  break;
+        case SLLI: printf("SLLI\n");  break;
+        case SRLI: printf("SRLI\n");  break;
+        case SRAI: printf("SRAI\n");  break;
+        case FADD: printf("FADD\n");  break;
+        case FSUB: printf("FSUB\n");  break;
+        case FMUL: printf("FMUL\n");  break;
+        case FDIV: printf("FDIV\n");  break;
+        case BEQ: printf("BEQ\n");  break;
+        case BLT: printf("BLT\n");  break;
+        case BLE: printf("BLE\n");  break;
+        case J: printf("J\n");  break;
+        case JR: printf("JR\n");  break;
+        case LW: printf("LW\n");  break;
+        case SW: printf("SW\n");  break;
+        case UNDEFINED: printf("UNDEFINED\n");  break;
+        default: printf("ERROR\n");
+    }
+}
+
 // 32bitの命令を受け取って実行する
 void exec(reg_set* reg, unsigned int num32, FILE* fp, int* flag) {
     op_set op = decord(num32);
+    printf("pc: %u\n", reg->pc);
+    printf("count: %u\n", reg->count);
+    print_id(op.nemonic);
+    printf("%u\n", op.dest);
+    printf("%u\n", op.src1);
+    printf("%u\n", op.src2);
+    printf("r0 = %u\n", reg->reg[0]);
+    printf("r95 = %u\n", reg->reg[95]);
+    printf("r250 = %u\n", reg->reg[250]);
+    printf("r251 = %u\n", reg->reg[251]);
+    printf("r252 = %u\n", reg->reg[252]);
+    printf("r253 = %u\n", reg->reg[253]);
+    printf("r254 = %u\n", reg->reg[254]);
+    printf("r255 = %u\n\n", reg->reg[255]);
     change chg;
     init_change(&chg);
     switch(op.nemonic) {
