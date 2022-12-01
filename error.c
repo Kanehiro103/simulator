@@ -1,5 +1,5 @@
 #include "error.h"
-#include "alu.h"
+#include "fpu.h"
 #include "library.h"
 
 // (fadd x1 x2) のシミュレート結果と、実際の x1 + x2 の相対誤差

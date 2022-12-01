@@ -3,10 +3,11 @@
 #include "decorder.h"
 #include "library.h"
 #include "alu.h"
+#include "fpu.h"
 #include "log.h"
 #include <stdio.h>
- 
- // レジスタに変更があったかどうか調べる
+
+// レジスタに変更があったかどうか調べる
 void check_chg(change* chg) {
     if(chg->before_pc != chg->after_pc) {
         chg->flag_pc = 1;
@@ -168,6 +169,33 @@ void addi(reg_set* reg, op_set* op, change* chg) {
 
     // 実行
     unsigned int ans =  addi_num(x1, op->src2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
+void subi(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x1 = reg_fetch(reg, op->src1);
+
+    // 実行
+    unsigned int ans =  subi_num(x1, op->src2);
 
     // メモリアクセス
 
@@ -512,6 +540,7 @@ void lw(reg_set* reg, op_set* op, change* chg) {
     // 実行
 
     // メモリアクセス
+    //unsigned int x1 = mem_fetch(reg, op->src2);
     unsigned int x1 = mem_fetch(reg, x);
 
     // ライトバック
@@ -592,7 +621,6 @@ void exec(reg_set* reg, unsigned int num32, FILE* fp, int* flag) {
     printf("%u\n", op.src1);
     printf("%u\n", op.src2);
     printf("r0 = %u\n", reg->reg[0]);
-    printf("r95 = %u\n", reg->reg[95]);
     printf("r250 = %u\n", reg->reg[250]);
     printf("r251 = %u\n", reg->reg[251]);
     printf("r252 = %u\n", reg->reg[252]);
@@ -608,6 +636,7 @@ void exec(reg_set* reg, unsigned int num32, FILE* fp, int* flag) {
         case SRL:   srl(reg, &op, &chg);   break;
         case SRA:   sra(reg, &op, &chg);   break;
         case ADDI:  addi(reg, &op, &chg);   break;
+        case SUBI:  subi(reg, &op, &chg);   break;
         case SLLI:  slli(reg, &op, &chg);   break;
         case SRLI:  srli(reg, &op, &chg);   break;
         case SRAI:  srai(reg, &op, &chg);   break;

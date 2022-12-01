@@ -1,9 +1,9 @@
-#include "register.h"
-#include "read.h"
-#include "exec.h"
-#include "print.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "register.h"
+#include "print.h"
+#include "exec.h"
+#include "read.h"
 
 int main(int argc, char* argv[]) {
     int flag = 0;
@@ -21,10 +21,13 @@ int main(int argc, char* argv[]) {
     sprintf(read_file, "%s%s%s", samples, argv[1], dat);
     sprintf(log_file, "%s%s%s", logfiles, argv[1], dat);
 
-    reg_set reg;
-    init_reg(&reg);
+    reg_set* rs;
+    rs = (reg_set*)malloc(sizeof(reg_set));
+    init_rs(rs);
 
-    if(read(&reg, read_file)) {
+    rs->mem[0xfffffff8] = 1024;
+
+    if(read(rs, read_file)) {
         printf("file not found\n");
         exit(1);
     }
@@ -35,10 +38,12 @@ int main(int argc, char* argv[]) {
     }
 
     while(!flag) {
-        exec(&reg, reg.mem[reg.pc], fp, &flag);
+        exec(rs, rs->mem[rs->pc], fp, &flag);
     }
-    print_reg(&reg);
+    print_reg(rs);
 
+    free_rs(rs);
     fclose(fp);
+
     return 0;
 }

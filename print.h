@@ -3,14 +3,13 @@
 
 #include "register.h"
 
-// 改行までに表示する要素の数
-#define NEW_LINE 8
+#define NEW_LINE 8  // 改行までに表示する要素の数
 
-// プログラムカウンタ・レジスタを表示する
+// レジスタファイルの内容表示
 void print_reg(reg_set*);
 
-// メモリを表示する
-// 第二・第三引数で行を指定
-void print_mem(reg_set*, int, int);   
+// メモリ内容の表示
+// start, end でそれぞれ表示を開始する行、終了する行を指定
+void print_mem(reg_set*, int, int);
 
 #endif

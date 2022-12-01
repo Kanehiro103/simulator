@@ -1,19 +1,22 @@
 #ifndef _REGISTER_H_
 #define _REGISTER_H_
 
-#define REGISTER_SIZE 256   // レジスタ数
-#define MEMORY_SIZE 1024    // メモリサイズ
+#define REG_SIZE 256    // レジスタサイズ
+#define MEM_SIZE 4294967296 // メモリサイズ
 
-// プログラムカウンタ・レジスタ・メモリを表現する構造体
+// レジスタ・メモリを表現する構造体
 typedef struct {
+    unsigned int count; // 命令実行回数
     unsigned int pc;    // プログラムカウンタ
-    unsigned int reg[REGISTER_SIZE];    // レジスタ
-    unsigned int mem[MEMORY_SIZE];  // メモリ
-    unsigned int count;     // 命令実行回数
+    unsigned int* reg;  // レジスタファイル
+    unsigned int* mem;  // メモリ
 } reg_set;
 
-// レジスタのゼロクリア
-void init_reg(reg_set*);
+// レジスタ・メモリの領域確保及び初期化(ゼロクリア)
+void init_rs(reg_set*);
+
+// 領域の解放
+void free_rs(reg_set*);
 
 // レジスタの値を読み出す
 unsigned int reg_fetch(reg_set*, unsigned int);
