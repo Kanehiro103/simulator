@@ -28,15 +28,15 @@ unsigned int sra_num(unsigned int x1, unsigned int x2) {
 }
 
 // 即値の加算
-/*
 unsigned int addi_num(unsigned int x1, unsigned int imm) {
     return x1 + imm;
 }
-*/
 
+/*
 unsigned int addi_num(unsigned int x1, unsigned int imm) {
     return (unsigned int)((int)x1 + to_signed(imm, 8));
 }
+*/
 
 // 即値の減算
 unsigned int subi_num(unsigned int x1, unsigned int imm) {
