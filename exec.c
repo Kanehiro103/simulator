@@ -292,6 +292,87 @@ void srai(reg_set* reg, op_set* op, change* chg) {
     check_chg(chg);
 }
 
+void fispos(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x2 = reg_fetch(reg, op->src2);
+
+    // 実行
+    unsigned int ans = fispos_num(x2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
+void fisneg(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x2 = reg_fetch(reg, op->src2);
+
+    // 実行
+    unsigned int ans = fisneg_num(x2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
+void fneg(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x2 = reg_fetch(reg, op->src2);
+
+    // 実行
+    unsigned int ans = fneg_num(x2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
 void fadd(reg_set* reg, op_set* op, change* chg) {
     // 前情報の保存
     chg->rm = 1;
@@ -389,6 +470,88 @@ void fdiv(reg_set* reg, op_set* op, change* chg) {
 
     // 実行
     unsigned int ans = fdiv_num(x1, x2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
+void fless(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x1 = reg_fetch(reg, op->src1);
+    unsigned int x2 = reg_fetch(reg, op->src2);
+
+    // 実行
+    unsigned int ans = fless_num(x1, x2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
+void ftoi(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x2 = reg_fetch(reg, op->src2);
+
+    // 実行
+    unsigned int ans = ftoi_num(x2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
+void itof(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x2 = reg_fetch(reg, op->src2);
+
+    // 実行
+    unsigned int ans = itof_num(x2);
 
     // メモリアクセス
 
@@ -603,10 +766,16 @@ void exec(reg_set* reg, unsigned int num32, FILE* fp, int* flag, int pflag, int 
         case SLLI:  slli(reg, &op, &chg);   break;
         case SRLI:  srli(reg, &op, &chg);   break;
         case SRAI:  srai(reg, &op, &chg);   break;
+        case FISPOS:    fispos(reg, &op, &chg); break;
+        case FISNEG:    fisneg(reg, &op, &chg); break;
+        case FNEG:    fneg(reg, &op, &chg); break;
         case FADD:  fadd(reg, &op, &chg);   break;
         case FSUB:  fsub(reg, &op, &chg);   break;
         case FMUL:  fmul(reg, &op, &chg);   break;
         case FDIV:  fdiv(reg, &op, &chg);   break;
+        case FLESS: fless(reg, &op, &chg);  break;
+        case FTOI:  ftoi(reg, &op, &chg);   break;
+        case ITOF:  itof(reg, &op, &chg);   break;
         case BEQ:   beq(reg, &op, &chg);    break;
         case BLE:   ble(reg, &op, &chg);    break;
         case BLT:   blt(reg, &op, &chg);  break;

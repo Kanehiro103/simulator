@@ -1,6 +1,7 @@
 #include "fpu.h"
 #include "library.h"
 #include "grad_list.h"
+#include <math.h>
 
 // 浮動小数点数の加算
 unsigned int fadd_num(unsigned int x1, unsigned int x2) {
@@ -346,4 +347,61 @@ unsigned int finv_num(unsigned int x1) {
 unsigned int fdiv_num(unsigned int x1, unsigned int x2) {
     unsigned int x2_inv = finv_num(x2);
     return fmul_num(x1, x2_inv);
+}
+
+// 浮動小数点数の比較
+// x1 < x2 なら1, そうでないなら0
+unsigned int fless_num(unsigned int x1, unsigned int x2) {
+    if(to_float(x1) < to_float(x2)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+// 浮動小数点数の内部表現を整数に変換
+// 小数点以下四捨五入
+unsigned int ftoi_num(unsigned int x2) {
+    return (unsigned int)(round(to_float(x2)));
+}
+
+// 最初に 1 が立つ桁を求める
+// 全部 0 だったら -1
+int top(unsigned int num32) {
+    int i;
+    for(i = 31; i >= 0; i--) {
+        if(cut(num32, i, i) == 1) {
+            break;
+        }
+    }
+    return i;
+}
+
+// 非負整数を受け取り、浮動小数点数に直す場合の指数部と仮数部を求める
+void itof_plus(unsigned int int32, unsigned int* e, unsigned int* m) {
+    int i = top(int32);
+    if(i < 0) {
+        *e = 0;
+        *m = 0;
+    } else if(i == 0){
+        *e = 127;
+        *m = 0;
+    } else {
+        unsigned long a = (unsigned long)int32 << 22;
+        *e = 127 + i;
+        *m = cut_ul(a, i + 21, i - 1);
+    }
+}
+
+// 整数型の数を受け取り、浮動小数点型(の内部表現)に変換
+unsigned int itof_num(unsigned int int32) {
+    unsigned int e, m;
+    int i = top(int32);
+    if(i == 31) {
+        itof_plus(-int32, &e, &m);
+        return fpn(1, e, m);
+    } else {
+        itof_plus(int32, &e, &m);
+        return fpn(0, e, m);
+    }
 }

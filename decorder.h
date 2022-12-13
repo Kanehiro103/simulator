@@ -3,7 +3,7 @@
 
 // 命令の種類
 enum nemonic  {
-    ADD,
+    ADD,    // 算術演算(整数)
     SUB,
     SLL,
     SRL,
@@ -13,16 +13,22 @@ enum nemonic  {
     SLLI,
     SRLI,
     SRAI,
-    FADD,
+    FISPOS,
+    FISNEG,
+    FNEG,
+    FADD,   // 算術演算(小数)
     FSUB,
     FMUL,
     FDIV,
-    BEQ,
+    FLESS,
+    FTOI,
+    ITOF,
+    BEQ,    // 分岐
     BLT,
     BLE,
-    J,
+    J,      // ジャンプ
     JR,
-    LW,
+    LW,     // メモリアクセス
     SW,
     UNDEFINED   // 不正なニーモニック
 };
@@ -31,7 +37,7 @@ enum nemonic  {
 enum opecode { OOO_op, OOI_op, OIO_op, IOO_op, IOI_op, III_op, IIO_op, Undefined_opecode };  // O = 0, I = 1
 
 //5桁のfunct
-enum funct5 { OOOOI, OOOIO, OOIOO, OIOOO, IOOOO, Undefined_funct5 };
+enum funct5 { OOOOI, OOOIO, OOIOO, OIOOO, IOOOO, IOOOI, IOOIO, IOIOO, Undefined_funct5 };
 
 //3桁のfunct
 enum funct3 { OOI, OIO, IOO, OOO, Undefined_funct3 };

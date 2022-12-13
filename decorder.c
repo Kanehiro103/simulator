@@ -23,6 +23,9 @@ enum funct5 identify_funct5(unsigned int num32) {
         case 4: return OOIOO;
         case 8: return OIOOO;
         case 16: return IOOOO;
+        case 17: return IOOOI;
+        case 18: return IOOIO;
+        case 20: return IOIOO;
         default: return Undefined_funct5;
     }
 }
@@ -47,6 +50,9 @@ enum nemonic identify_nemonic(enum opecode opecode, enum funct5 funct5, enum fun
                             case OOIOO: return SLL;
                             case OIOOO: return SRL;
                             case IOOOO: return SRA;
+                            case IOOOI: return FISPOS;
+                            case IOOIO: return FISNEG;
+                            case IOIOO: return FNEG;
                             default: return UNDEFINED;
                         }
         case OOI_op:    switch(funct5) {
@@ -63,6 +69,9 @@ enum nemonic identify_nemonic(enum opecode opecode, enum funct5 funct5, enum fun
                             case OOOIO: return FSUB;
                             case OOIOO: return FMUL;
                             case OIOOO: return FDIV;
+                            case IOOOI: return FLESS;
+                            case IOOIO: return FTOI;
+                            case IOIOO: return ITOF;
                             default: return UNDEFINED;
                         }
         case IOO_op:    switch(funct3) {

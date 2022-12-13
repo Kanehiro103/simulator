@@ -43,10 +43,14 @@ void print_id(enum nemonic op) {
         case SLLI: printf("SLLI\n");  break;
         case SRLI: printf("SRLI\n");  break;
         case SRAI: printf("SRAI\n");  break;
+        case FISPOS: printf("FISPOS\n"); break;
+        case FISNEG: printf("FISNEG\n"); break;
+        case FNEG: printf("FNEG\n"); break;
         case FADD: printf("FADD\n");  break;
         case FSUB: printf("FSUB\n");  break;
         case FMUL: printf("FMUL\n");  break;
         case FDIV: printf("FDIV\n");  break;
+        case FLESS: printf("FLESS\n"); break;
         case BEQ: printf("BEQ\n");  break;
         case BLT: printf("BLT\n");  break;
         case BLE: printf("BLE\n");  break;

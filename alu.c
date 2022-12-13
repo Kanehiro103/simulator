@@ -58,3 +58,36 @@ unsigned int srai_num(unsigned x1, unsigned int imm) {
     unsigned int s = cut(x1, 31, 31);
     return (s << 31) + (cut(x1, 30, 0) >> imm);
 }
+
+// 浮動小数点数が正であるか否か
+// 正ならば0, 0以下ならば1
+unsigned int fispos_num(unsigned int x2) {
+    if(cut(x2, 31, 31)) {
+        return 0;
+    } else {
+        if(x2 == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+}
+
+// 浮動小数点数が負であるか否か
+// 負ならば1, 0以上ならば1
+unsigned int fisneg_num(unsigned int x2) {
+    if(cut(x2, 31, 31)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+// 浮動小数点数の符号反転
+unsigned int fneg_num(unsigned int x2) {
+    if(cut(x2, 31, 31)) {
+        return cut(x2, 30, 0);
+    } else {
+        return x2 + (1 << 31);
+    }
+}
