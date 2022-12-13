@@ -19,10 +19,4 @@ unsigned int fpn(unsigned int, unsigned int, unsigned int);
 // 浮動小数点数の内部表現を数値に変換
 float to_float(unsigned int);
 
-// 浮動小数点数の内部表現を受け取り、整数型に変換
-unsigned int int_of_float(unsigned int);
-
-// 整数型の数を受け取り、浮動小数点型(の内部表現)に変換
-unsigned int float_of_int(unsigned int);
-
 #endif
