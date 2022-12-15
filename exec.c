@@ -567,6 +567,33 @@ void itof(reg_set* reg, op_set* op, change* chg) {
     check_chg(chg);
 }
 
+void fsqrt(reg_set* reg, op_set* op, change* chg) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x2 = reg_fetch(reg, op->src2);
+
+    // 実行
+    unsigned int ans = fsqrt_num(x2);
+
+    // メモリアクセス
+
+    // ライトバック
+    reg_write(reg, op->dest, ans);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
 void beq(reg_set* reg, op_set* op, change* chg) {
     // 前情報の保存
     chg->before_pc = reg->pc;
@@ -776,6 +803,7 @@ void exec(reg_set* reg, unsigned int num32, FILE* fp, int* flag, int pflag, int 
         case FLESS: fless(reg, &op, &chg);  break;
         case FTOI:  ftoi(reg, &op, &chg);   break;
         case ITOF:  itof(reg, &op, &chg);   break;
+        case FSQRT: fsqrt(reg, &op, &chg);  break;
         case BEQ:   beq(reg, &op, &chg);    break;
         case BLE:   ble(reg, &op, &chg);    break;
         case BLT:   blt(reg, &op, &chg);  break;

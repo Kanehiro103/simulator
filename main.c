@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "register.h"
 #include "print.h"
 #include "exec.h"
 #include "read.h"
+#include "error.h"
+#include "fpu.h"
+#include "library.h"
 
 int main(int argc, char* argv[]) {
     char* samples = "./samples/";

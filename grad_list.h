@@ -3,7 +3,10 @@
 
 #define GRAD_LIST_SIZE 1024
 
-//finvの計算で使用
-unsigned long grad_list[GRAD_LIST_SIZE];
+// finvの計算で使用
+unsigned long finv_list[GRAD_LIST_SIZE];
+
+// fsqrtの計算で使用
+unsigned long fsqrt_list[GRAD_LIST_SIZE];
 
 #endif

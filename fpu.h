@@ -9,5 +9,6 @@ unsigned int fdiv_num(unsigned int, unsigned int);
 unsigned int fless_num(unsigned int, unsigned int);
 unsigned int ftoi_num(unsigned int);
 unsigned int itof_num(unsigned int);
+unsigned int fsqrt_num(unsigned int);
 
 #endif

@@ -9,8 +9,8 @@ enum opecode identify_opecode(unsigned int num32) {
         case 2: return OIO_op;
         case 4: return IOO_op;
         case 5: return IOI_op;
-        case 7: return III_op;
         case 6: return IIO_op;
+        case 7: return III_op;
         default: return Undefined_opecode;
     }
 }
@@ -29,6 +29,7 @@ enum funct5 identify_funct5(unsigned int num32) {
         case 17: return IOOOI;
         case 18: return IOOIO;
         case 20: return IOIOO;
+        case 24: return IIOOO;
         default: return Undefined_funct5;
     }
 }
@@ -36,10 +37,10 @@ enum funct5 identify_funct5(unsigned int num32) {
 // 3桁のfunctの識別
 enum funct3 identify_funct3(unsigned int num32) {
     switch(cut(num32, 28, 26)) {
+        case 0: return OOO;
         case 1: return OOI;
         case 2: return OIO;
         case 4: return IOO;
-        case 0: return OOO;
         default: return Undefined_funct3;
     }
 }
@@ -75,6 +76,7 @@ enum nemonic identify_nemonic(enum opecode opecode, enum funct5 funct5, enum fun
                             case IOOOI: return FLESS;
                             case IOOIO: return FTOI;
                             case IOIOO: return ITOF;
+                            case IIOOO: return FSQRT;
                             default: return UNDEFINED;
                         }
         case IOO_op:    switch(funct3) {

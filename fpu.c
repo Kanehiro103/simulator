@@ -314,7 +314,7 @@ unsigned int finv_num(unsigned int x1) {
 
     index = cut(m1, 22, 13);
 
-    Q = grad_list[index];
+    Q = finv_list[index];
 
     a = (unsigned int)cut_ul(Q, 34, 23);
     b = (unsigned int)cut_ul(Q, 22, 0);
@@ -404,4 +404,58 @@ unsigned int itof_num(unsigned int int32) {
         itof_plus(int32, &e, &m);
         return fpn(0, e, m);
     }
+}
+
+unsigned int fsqrt_num(unsigned int x2) {
+    unsigned int s1, e1, m1;
+    unsigned int index_m, index_e, index;
+    unsigned long Q;
+    unsigned int a, b;
+    unsigned int e_a;
+    unsigned int x2_e;
+    unsigned int x1_fmul, x2_fmul;
+    unsigned int m1_sqrt_before_add;
+    unsigned int x1_fadd;
+    unsigned int m1_sqrt;
+    unsigned int s, e, m;
+
+    s1 = cut(x2, 31, 31);
+    e1 = cut(x2, 30, 23);
+    m1 = cut(x2, 22, 0);
+
+    index_m = cut(m1, 22, 14);
+    if(cut(e1, 0, 0)) {
+        index_e = 0;
+    } else {
+        index_e = 1;
+    }
+    index = (index_e << 9) + index_m;
+
+    Q = fsqrt_list[index];
+    a = (unsigned int)cut_ul(Q, 35, 23);
+    b = (unsigned int)cut_ul(Q, 22, 0);
+
+    e_a = 0b01111101;
+    if(cut(e1, 0, 0) == 1) {
+        x2_e = 0b01111111;
+    } else {
+        x2_e = 0b10000000;
+    }
+    x1_fmul = fpn(0, e_a, (a << 10));
+    x2_fmul = fpn(0, x2_e, m1);
+
+    m1_sqrt_before_add = fmul_num(x1_fmul, x2_fmul);
+    x1_fadd = fpn(0, 0b01111110, b);
+
+    m1_sqrt = fadd_num(x1_fadd, m1_sqrt_before_add);
+
+    s = s1;
+    if(cut(e1, 0, 0) == 1) {
+        e = cut(m1_sqrt, 30, 23) + ((e1 + 1) >> 1) - 64;
+    } else {
+        e = cut(m1_sqrt, 30, 23) + (e1 >> 1) - 64;
+    }
+    m = cut(m1_sqrt, 22, 0);
+    
+    return fpn(s, e, m);
 }

@@ -23,6 +23,7 @@ enum nemonic  {
     FLESS,
     FTOI,
     ITOF,
+    FSQRT,
     BEQ,    // 分岐
     BLT,
     BLE,
@@ -37,7 +38,7 @@ enum nemonic  {
 enum opecode { OOO_op, OOI_op, OIO_op, IOO_op, IOI_op, III_op, IIO_op, Undefined_opecode };  // O = 0, I = 1
 
 //5桁のfunct
-enum funct5 { OOOOI, OOOIO, OOIOO, OIOOO, OIOOI, OIOIO, OIIOO, IOOOO, IOOOI, IOOIO, IOIOO, Undefined_funct5 };
+enum funct5 { OOOOI, OOOIO, OOIOO, OIOOO, OIOOI, OIOIO, OIIOO, IOOOO, IOOOI, IOOIO, IOIOO, IIOOO, Undefined_funct5 };
 
 //3桁のfunct
 enum funct3 { OOI, OIO, IOO, OOO, Undefined_funct3 };
