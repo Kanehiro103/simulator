@@ -22,4 +22,6 @@ void init_change(change*);
 // [実行命令回数] [更新部分(pc or reg or mem)] [更新前] [更新後] [アドレス(pc の場合 0)]
 void  logger(FILE*, change*, unsigned int);
 
+void uart(FILE*, change*, unsigned int);
+
 #endif

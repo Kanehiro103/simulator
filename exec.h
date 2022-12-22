@@ -4,7 +4,18 @@
 #include "register.h"
 #include <stdio.h>
 
+typedef struct {
+    FILE* fpl;
+    FILE* fpu; 
+} fps;
+
+typedef struct {
+    int pflag;
+    int lflag;
+    int uflag;
+} flags;
+
 // 32bitの命令を受け取って実行する
-void exec(reg_set*, unsigned int, FILE*, int*, int, int);
+void exec(reg_set*, unsigned int, fps*, int*, flags*);
 
 #endif

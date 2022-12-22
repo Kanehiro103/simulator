@@ -775,7 +775,12 @@ void sw(reg_set* reg, op_set* op, change* chg) {
 }
 
 // 32bitの命令を受け取って実行する
-void exec(reg_set* reg, unsigned int num32, FILE* fp, int* flag, int pflag, int lflag) {
+void exec(reg_set* reg, unsigned int num32, fps* fps, int* flag, flags* flgs) {
+    int pflag = flgs->pflag;
+    int lflag = flgs->lflag;
+    int uflag = flgs->uflag;
+    FILE* fpl = fps->fpl;
+    FILE* fpu = fps->fpu;
     op_set op = decord(num32);
     if(pflag) {
         print_ro(reg, &op);
@@ -820,7 +825,11 @@ void exec(reg_set* reg, unsigned int num32, FILE* fp, int* flag, int pflag, int 
         *flag = 1;
     } else {
         if(lflag) {
-            logger(fp, &chg, reg->count);
+            logger(fpl, &chg, reg->count);
+        }
+
+        if(uflag) {
+            uart(fpu, &chg, reg->count);
         }
     }
 }

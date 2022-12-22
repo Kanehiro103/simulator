@@ -15,10 +15,15 @@ int main(int argc, char* argv[]) {
     char* dat = ".dat";
     char read_file[128];
     char s[16];
-    int pflag = 0;
-    int lflag = 0;
-    FILE* fp = NULL;
-    int op = 0;
+    flags flgs;
+    flgs.pflag = 0;
+    flgs.lflag = 0;
+    flgs.uflag = 0;
+    fps fps;
+    fps.fpl = NULL;
+    fps.fpu = NULL;
+    int opl = 0;
+    int opu = 0;
     int flag = 0;
 
     if(argc <= 1) {
@@ -43,7 +48,7 @@ int main(int argc, char* argv[]) {
         printf("stdout?   y/n : ");
         scanf("%s", s);
         if(strcmp(s, "y") == 0) {
-            pflag = 1;
+            flgs.pflag = 1;
             break;
         } else if(strcmp(s, "n") == 0) {
             break;
@@ -56,7 +61,7 @@ int main(int argc, char* argv[]) {
         printf("logfile?  y/n : ");
         scanf("%s", s);
         if(strcmp(s, "y") == 0) {
-            lflag = 1;
+            flgs.lflag = 1;
             break;
         } else if(strcmp(s, "n") == 0) {
             break;
@@ -65,30 +70,62 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if(lflag) {
+    while(1) {
+        printf("uart?     y/n : ");
+        scanf("%s", s);
+        if(strcmp(s, "y") == 0) {
+            flgs.uflag = 1;
+            break;
+        } else if(strcmp(s, "n") == 0) {
+            break;
+        } else {
+            continue;
+        }
+    }
+
+    if(flgs.lflag) {
         char* logfiles = "./logfiles/log_";
         char log_file[128];
 
         sprintf(log_file, "%s%s%s", logfiles, argv[1], dat);
 
-        fp = fopen(log_file, "w");
-        if(fp == NULL) {
+        fps.fpl = fopen(log_file, "w");
+        if(fps.fpl == NULL) {
             printf("faild to open log_file\n");
             exit(1);
         } else {
-            op = 1;
+            opl = 1;
+        }
+    }
+
+    if(flgs.uflag) {
+        char* uartfiles = "./uart/uart_";
+        char uart_file[128];
+
+        sprintf(uart_file, "%s%s%s", uartfiles, argv[1], dat);
+
+        fps.fpu = fopen(uart_file, "w");
+        if(fps.fpu == NULL) {
+            printf("faild to open log_file\n");
+            exit(1);
+        } else {
+            opu = 1;
         }
     }
 
     while(!flag) {
-        exec(rs, rs->mem[rs->pc], fp, &flag, pflag, lflag);
+        exec(rs, rs->mem[rs->pc], &fps, &flag, &flgs);
     }
     print_reg(rs);
 
     free_rs(rs);
 
-    if(op) {
-        fclose(fp);
+    if(opl) {
+        fclose(fps.fpl);
+    }
+
+    if(opu) {
+        fclose(fps.fpu);
     }
 
     return 0;

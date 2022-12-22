@@ -22,7 +22,15 @@ void logger(FILE* fp, change* chg, unsigned int count) {
     }
 
     // レジスタ/メモリの更新ログ
-    if(chg->flag_pc) {
+    if(chg->flag_rm) {
         fprintf(fp, "%u %u %u %u %u\n", count, chg->rm, chg->before_rm, chg->after_rm, chg->addr);
+    }
+}
+
+void uart(FILE* fp, change* chg, unsigned int count) {
+    if(chg->flag_rm) {
+        if(chg->addr == -12) {
+            fprintf(fp, "count: %u   data: %x\n",  count, chg->after_rm);
+        } 
     }
 }
