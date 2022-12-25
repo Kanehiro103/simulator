@@ -23,6 +23,7 @@ int main(int argc, char* argv[]) {
     fps fps;
     fps.fpl = NULL;
     fps.fpu = NULL;
+    fps.fpi = NULL;
     int opl = 0;
     int opu = 0;
     int flag = 0;
@@ -30,6 +31,17 @@ int main(int argc, char* argv[]) {
     if(argc <= 1) {
         printf("Usage: %s <filename>\n", argv[0]);
         exit(1);
+    }
+
+    if(argc == 3) {
+        char* input = "./input/";
+        char input_file[128];
+        sprintf(input_file, "%s%s", input, argv[2]);
+        fps.fpi = fopen(input_file, "r");
+        if(fps.fpi == NULL) {
+            printf("file not found");
+            exit(1);
+        }
     }
 
     if(strcmp(argv[1], "#disasm") == 0) {
@@ -48,6 +60,7 @@ int main(int argc, char* argv[]) {
         init_rs(rs);
 
         rs->mem[0xfffffff8] = 1024;
+        rs->mem[0xfffffff2] = 1024;
 
         if(read(rs, read_file)) {
             printf("file not found\n");

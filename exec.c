@@ -6,6 +6,7 @@
 #include "fpu.h"
 #include "log.h"
 #include "print.h"
+#include "uart.h"
 
 // レジスタに変更があったかどうか調べる
 void check_chg(change* chg) {
@@ -717,7 +718,12 @@ void jr(reg_set* reg, op_set* op, change* chg) {
     check_chg(chg);
 }
 
-void lw(reg_set* reg, op_set* op, change* chg) {
+void lw(reg_set* reg, op_set* op, change* chg, FILE* fpi) {
+    unsigned int dest = reg_fetch(reg, op->src2);
+    if (dest == -15) {
+        reg->mem[dest] = uart_read(fpi);
+        printf("%x\n", reg->mem[dest]);
+    }
     // 前情報の保存
     chg->rm = 1;
     chg->addr = op->dest;
@@ -814,7 +820,7 @@ void exec(reg_set* reg, unsigned int num32, fps* fps, int* flag, flags* flgs) {
         case BLT:   blt(reg, &op, &chg);  break;
         case J:     j(reg, &op, &chg);  break;
         case JR:    jr(reg, &op, &chg);    break;
-        case LW:    lw(reg, &op, &chg);    break;
+        case LW:    lw(reg, &op, &chg, fps->fpi);    break;
         case SW:    sw(reg, &op, &chg);    break;
         default: break;
     }

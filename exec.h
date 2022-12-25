@@ -7,6 +7,7 @@
 typedef struct {
     FILE* fpl;
     FILE* fpu; 
+    FILE* fpi;
 } fps;
 
 typedef struct {
