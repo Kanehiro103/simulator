@@ -37,7 +37,8 @@ int main(int argc, char* argv[]) {
         char* input = "./input/";
         char input_file[128];
         sprintf(input_file, "%s%s", input, argv[2]);
-        fps.fpi = fopen(input_file, "r");
+        //fps.fpi = fopen(input_file, "r");
+        fps.fpi = fopen(input_file, "rb");
         if(fps.fpi == NULL) {
             printf("file not found");
             exit(1);

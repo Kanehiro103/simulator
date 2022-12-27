@@ -4,5 +4,6 @@
 #include <stdio.h>
 
 unsigned int uart_read(FILE*);
+unsigned int uart_read_b(FILE*);
 
 #endif
