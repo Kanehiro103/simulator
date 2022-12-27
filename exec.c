@@ -723,7 +723,7 @@ void lw(reg_set* reg, op_set* op, change* chg, FILE* fpi) {
     if (dest == -15) {
         //reg->mem[dest] = uart_read(fpi);
         reg->mem[dest] = uart_read_b(fpi);
-        printf("%x\n", reg->mem[dest]);
+        printf("%u %x\n", op->dest, reg->mem[dest]);
     }
     // 前情報の保存
     chg->rm = 1;
