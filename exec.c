@@ -718,6 +718,7 @@ void jr(reg_set* reg, op_set* op, change* chg) {
     check_chg(chg);
 }
 
+/*
 void lw(reg_set* reg, op_set* op, change* chg, FILE* fpi) {
     unsigned int dest = reg_fetch(reg, op->src2);
     if (dest == -15) {
@@ -751,7 +752,9 @@ void lw(reg_set* reg, op_set* op, change* chg, FILE* fpi) {
     chg->after_rm = reg_fetch(reg, op->dest);
     check_chg(chg);
 }
+*/
 
+/*
 void sw(reg_set* reg, op_set* op, change* chg) {
     // 前情報の保存
     chg->rm = 2;
@@ -763,11 +766,10 @@ void sw(reg_set* reg, op_set* op, change* chg) {
 
     // 前情報の保存
     chg->addr = x1;
-    /*
     if(chg->addr == -12) {
         printf("%d\n", reg->pc);
     }
-    */
+
     chg->before_rm = mem_fetch(reg, x1);
 
     // 実行
@@ -783,6 +785,69 @@ void sw(reg_set* reg, op_set* op, change* chg) {
     // 更新チェック
     chg->after_pc = reg->pc;
     chg->after_rm = mem_fetch(reg, x1);
+    check_chg(chg);
+}
+*/
+
+void lw(reg_set *reg, op_set *op, change *chg, FILE *fpi) {
+    // 前情報の保存
+    chg->rm = 1;
+    chg->addr = op->dest;
+    chg->before_pc = reg->pc;
+    chg->before_rm = reg_fetch(reg, op->dest);
+
+    // レジスタフェッチ
+    unsigned int x = reg_fetch(reg, op->src2);
+
+    // 実行
+
+    // メモリアクセス
+    //unsigned int x1 = mem_fetch(reg, op->src2);
+    unsigned int x1 = (x == -15) ? uart_read_b(fpi) : mem_fetch(reg, x);
+    if (x == -15) { printf("%u %x\n", op->dest, x1); }
+
+    // ライトバック
+    reg_write(reg, op->dest, x1);
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = reg_fetch(reg, op->dest);
+    check_chg(chg);
+}
+
+void sw(reg_set *reg, op_set *op, change *chg, FILE *fpu) {
+    // 前情報の保存
+    chg->rm = 2;
+    chg->before_pc = reg->pc;
+
+    // レジスタフェッチ
+    unsigned int x1 = reg_fetch(reg, op->src2); // addr
+    unsigned int x2 = reg_fetch(reg, op->src1); // num
+
+    // 前情報の保存
+    chg->addr = x1;
+    chg->before_rm = (x1 == -12) ? -1 : mem_fetch(reg, x1);
+
+    // 実行
+
+    // メモリアクセス
+    if (x1 == -12) {
+        fprintf(fpu, "%c", x2);
+    } else {
+        mem_write(reg, x1, x2);
+    }
+
+    // ライトバック
+
+    // pc更新
+    reg->pc++;
+
+    // 更新チェック
+    chg->after_pc = reg->pc;
+    chg->after_rm = (x1 == -12) ? -2 : mem_fetch(reg, x1);
     check_chg(chg);
 }
 
@@ -827,7 +892,7 @@ void exec(reg_set* reg, unsigned int num32, fps* fps, int* flag, flags* flgs) {
         case J:     j(reg, &op, &chg);  break;
         case JR:    jr(reg, &op, &chg);    break;
         case LW:    lw(reg, &op, &chg, fps->fpi);    break;
-        case SW:    sw(reg, &op, &chg);    break;
+        case SW:    sw(reg, &op, &chg, fps->fpu);    break;
         default: break;
     }
     reg->count++;

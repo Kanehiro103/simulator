@@ -15,6 +15,7 @@
 int main(int argc, char* argv[]) {
     char* samples = "./samples/";
     char* dat = ".dat";
+    char* ppm = ".ppm";
     char read_file[128];
     char s[16];
     flags flgs;
@@ -123,12 +124,27 @@ int main(int argc, char* argv[]) {
                 opl = 1;
             }
         }
-
+/*
         if(flgs.uflag) {
             char* uartfiles = "./uart/uart_";
             char uart_file[128];
 
             sprintf(uart_file, "%s%s%s", uartfiles, argv[1], dat);
+
+            fps.fpu = fopen(uart_file, "w");
+            if(fps.fpu == NULL) {
+                printf("faild to open log_file\n");
+                exit(1);
+            } else {
+                opu = 1;
+            }
+        }
+*/
+        if(flgs.uflag) {
+            char* uartfiles = "./ppm/uart_";
+            char uart_file[128];
+
+            sprintf(uart_file, "%s%s%s", uartfiles, argv[1], ppm);
 
             fps.fpu = fopen(uart_file, "w");
             if(fps.fpu == NULL) {
@@ -144,7 +160,7 @@ int main(int argc, char* argv[]) {
             exec(rs, rs->mem[rs->pc], &fps, &flag, &flgs);
         }
         end_clock = clock();
-        printf("count:%d   time:%f\n", rs->count, (double)(end_clock - start_clock) / CLOCKS_PER_SEC);
+        printf("count:%lu   time:%f\n", rs->count, (double)(end_clock - start_clock) / CLOCKS_PER_SEC);
         print_reg(rs);
 
         free_rs(rs);

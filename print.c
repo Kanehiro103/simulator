@@ -69,7 +69,7 @@ void print_id(enum nemonic op) {
 
 void print_ro(reg_set* reg, op_set* op) {
     printf("pc: %u\n", reg->pc);
-    printf("count: %u\n", reg->count);
+    printf("count: %lu\n", reg->count);
     print_id(op->nemonic);
     printf("%u\n", op->dest);
     printf("%u\n", op->src1);

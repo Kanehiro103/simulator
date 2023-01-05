@@ -88,6 +88,10 @@ unsigned int fneg_num(unsigned int x2) {
     if(cut(x2, 31, 31)) {
         return cut(x2, 30, 0);
     } else {
-        return x2 + (1 << 31);
+        if(x2 == 0) {
+            return 0;
+        } else {
+            return x2 + (1 << 31);
+        }
     }
 }

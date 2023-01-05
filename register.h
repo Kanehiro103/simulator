@@ -6,7 +6,7 @@
 
 // レジスタ・メモリを表現する構造体
 typedef struct {
-    unsigned int count; // 命令実行回数
+    unsigned long count; // 命令実行回数
     unsigned int pc;    // プログラムカウンタ
     unsigned int* reg;  // レジスタファイル
     unsigned int* mem;  // メモリ
