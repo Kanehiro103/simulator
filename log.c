@@ -31,6 +31,7 @@ void uart(FILE* fp, change* chg, unsigned int count) {
     if(chg->flag_rm) {
         if(chg->addr == -12) {
             fprintf(fp, "count: %u   data: %x\n",  count, chg->after_rm);
+            //printf("count: %u   data: %x\n",  count, chg->after_rm);
         } 
     }
 }

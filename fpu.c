@@ -298,6 +298,7 @@ unsigned int fmul_num(unsigned int x1, unsigned int x2) {
 }
 
 // 浮動小数点数の逆数
+/*
 unsigned int finv_num(unsigned int x1) {
     unsigned int s1 = cut(x1, 31, 31);
     unsigned int e1 = cut(x1, 30, 23);
@@ -338,6 +339,39 @@ unsigned int finv_num(unsigned int x1) {
     } else {
         e = 0b11111110 - e1;
     }
+    m = cut(m1_inv, 22, 0);
+
+    return fpn(s, e, m);
+}
+*/
+
+unsigned int finv_num(unsigned int x1) {
+    unsigned int s1, e1, m1;
+    unsigned int index;
+    unsigned int s, e;
+    unsigned int x2_fmul;
+    unsigned int a, b; // 傾き・切片
+    unsigned int m1_inv_sub;
+    unsigned int m1_inv;
+    unsigned int m;
+
+    s1 = cut(x1, 31, 31);
+    e1 = cut(x1, 30, 23);
+    m1 = cut(x1, 22, 0);
+
+    index = cut(m1, 22, 13);
+    a = finv_grad[index];
+    b = finv_intercept[index];
+
+    s = s1;
+    e = 0b11111101 - e1;
+
+    x2_fmul = fpn(0, 0b01111111, m1);
+
+    m1_inv_sub = fmul_num(a, x2_fmul);
+
+    m1_inv = fsub_num(b, m1_inv_sub);
+
     m = cut(m1_inv, 22, 0);
 
     return fpn(s, e, m);
@@ -406,6 +440,7 @@ unsigned int itof_num(unsigned int int32) {
     }
 }
 
+/*
 unsigned int fsqrt_num(unsigned int x2) {
     unsigned int s1, e1, m1;
     unsigned int index_m, index_e, index;
@@ -457,5 +492,59 @@ unsigned int fsqrt_num(unsigned int x2) {
     }
     m = cut(m1_sqrt, 22, 0);
     
+    return fpn(s, e, m);
+}
+*/
+
+unsigned int fsqrt_num(unsigned int x1) {
+    unsigned int s1, e1, m1;
+    unsigned int index_e, index_m;
+    unsigned int index;
+    unsigned int a, b; // 傾き・切片
+    unsigned int x2_e;
+    unsigned int x2_fmul;
+    unsigned int m1_sqrt_before_add; 
+    unsigned int x1_fadd;
+    unsigned int m1_sqrt;
+    unsigned int s, e, m;
+    
+    s1 = cut(x1, 31, 31);
+    e1 = cut(x1, 30, 23);
+    m1 = cut(x1, 22, 0);
+
+    if(cut(e1, 0, 0)) {
+        index_e = 0;
+    } else {
+        index_e = 1;
+    }
+    index_m = cut(m1, 22, 14);
+
+    index = (index_e << 9) + index_m;
+
+    a = fsqrt_grad[index];
+    b = fsqrt_intercept[index];
+ 
+    if(cut(e1, 0, 0)) {
+        x2_e = 0b01111111;
+    } else {
+        x2_e = 0b10000000;
+    }
+
+    x2_fmul = fpn(0, x2_e, m1);
+
+    m1_sqrt_before_add = fmul_num(a, x2_fmul);
+
+    x1_fadd = b;
+    m1_sqrt = fadd_num(x1_fadd, m1_sqrt_before_add);
+
+    s = s1;
+    if(cut(e1, 0, 0)) {
+        //m1_sqrt[30:23] + ((e1_reg+1)>>1) - 8'd64
+        e = cut(m1_sqrt, 30, 23) + ((e1 + 1)>>1) - 64;
+    } else {
+        //m1_sqrt[30:23]+(e1_reg>>1)-8'd64
+        e = cut(m1_sqrt, 30, 23) + (e1>>1) - 64;
+    }
+    m = cut(m1_sqrt, 22, 0);
     return fpn(s, e, m);
 }

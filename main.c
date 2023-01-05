@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include "register.h"
 #include "print.h"
 #include "exec.h"
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
     int opl = 0;
     int opu = 0;
     int flag = 0;
+    clock_t start_clock, end_clock;
 
     if(argc <= 1) {
         printf("Usage: %s <filename>\n", argv[0]);
@@ -137,9 +139,12 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        start_clock = clock();
         while(!flag) {
             exec(rs, rs->mem[rs->pc], &fps, &flag, &flgs);
         }
+        end_clock = clock();
+        printf("count:%d   time:%f\n", rs->count, (double)(end_clock - start_clock) / CLOCKS_PER_SEC);
         print_reg(rs);
 
         free_rs(rs);
@@ -161,5 +166,6 @@ int main(int argc, char* argv[]) {
     //scanf("%f", &b.f);
     printf("%d\n", ftoi_num(a.i));
     */
+    //printf("clock:%f\n", (double)(462572787 / CLOCKS_PER_SEC));
     return 0;
 }
